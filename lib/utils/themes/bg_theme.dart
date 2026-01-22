@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:insurance_police/utils/themes/schema_color.dart';
+import 'package:pry_chat_app/utils/themes/schema_color.dart';
 
 class BgThemeApp {
   static const BoxDecoration bgDecoration = BoxDecoration(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pry_chat_app/utils/themes/general_theme.dart';
 import '../providers/chat_provider.dart';
 import '../../domain/models/message.dart';
 
@@ -7,7 +8,10 @@ class ChatView extends ConsumerWidget {
   ChatView({super.key});
 
   final TextEditingController controller = TextEditingController();
-  final String usuario = "Usuario Jefferson";
+
+  // IMPORTANTE: Para probar con un amigo, uno debe tener "Jefferson"
+  // y el otro debe cambiar esta variable a su propio nombre.
+  final String usuario = "Usuario Luis";
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -16,21 +20,21 @@ class ChatView extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Chat en Tiempo Real'),
+        title: const Text('Chat Grupal'),
         centerTitle: true,
-        elevation: 2,
+        elevation: 1,
       ),
       body: Column(
         children: [
-          // Área de visualización de mensajes
+          // Lista de mensajes
           Expanded(
             child: mensajesAsync.when(
               data: (mensajes) => ListView.builder(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(12),
                 itemCount: mensajes.length,
                 itemBuilder: (_, i) {
                   final m = mensajes[i];
-                  // Determinamos si el mensaje es del usuario actual para el diseño
+                  // Verificamos si el autor del mensaje soy yo
                   final esMio = m.author == usuario;
 
                   return Align(
@@ -38,18 +42,27 @@ class ChatView extends ConsumerWidget {
                         ? Alignment.centerRight
                         : Alignment.centerLeft,
                     child: Container(
-                      margin: const EdgeInsets.symmetric(vertical: 5),
+                      margin: const EdgeInsets.symmetric(vertical: 4),
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 15,
+                        horizontal: 14,
                         vertical: 10,
                       ),
                       decoration: BoxDecoration(
-                        color: esMio
-                            ? Theme.of(context).colorScheme.primary
-                            : Theme.of(
-                                context,
-                              ).colorScheme.secondary.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(15),
+                        // Color verde para mis mensajes, gris para los de mi amigo
+                        color: esMio ? Colors.lightGreenAccent : Colors.white,
+                        borderRadius: BorderRadius.only(
+                          topLeft: const Radius.circular(12),
+                          topRight: const Radius.circular(12),
+                          bottomLeft: Radius.circular(esMio ? 12 : 0),
+                          bottomRight: Radius.circular(esMio ? 0 : 12),
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.05),
+                            blurRadius: 2,
+                            offset: const Offset(0, 1),
+                          ),
+                        ],
                       ),
                       child: Column(
                         crossAxisAlignment: esMio
@@ -58,21 +71,18 @@ class ChatView extends ConsumerWidget {
                         children: [
                           Text(
                             m.author,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 12,
-                              color: esMio
-                                  ? Theme.of(context).colorScheme.onPrimary
-                                  : Theme.of(context).colorScheme.onSurface,
+                              color: Colors.blueGrey,
                             ),
                           ),
-                          const SizedBox(height: 5),
+                          const SizedBox(height: 2),
                           Text(
                             m.text,
-                            style: TextStyle(
-                              color: esMio
-                                  ? Theme.of(context).colorScheme.onPrimary
-                                  : Theme.of(context).colorScheme.onSurface,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.black87,
                             ),
                           ),
                         ],
@@ -82,44 +92,56 @@ class ChatView extends ConsumerWidget {
                 },
               ),
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (e, _) => Center(child: Text('Error: $e')),
+              error: (e, _) => Center(child: Text('Error de conexión: $e')),
             ),
           ),
 
-          // Barra de entrada de texto
-          SafeArea(
-            child: Container(
-              padding: const EdgeInsets.all(8.0),
-              decoration: BoxDecoration(
-                color: Theme.of(context).cardColor,
-                boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4)],
-              ),
+          // Barra inferior para escribir
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              border: Border(top: BorderSide(color: Colors.grey[300]!)),
+            ),
+            child: SafeArea(
               child: Row(
                 children: [
                   Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: TextField(
-                        controller: controller,
-                        decoration: const InputDecoration(
-                          hintText: 'Escribe un mensaje...',
-                          border: InputBorder.none,
+                    child: TextField(
+                      controller: controller,
+                      decoration: InputDecoration(
+                        hintText: 'Escribe un mensaje...',
+                        fillColor: Colors.white,
+                        filled: true,
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 15,
+                          vertical: 10,
                         ),
-                        onSubmitted: (value) => _enviar(service),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(25),
+                          borderSide: BorderSide.none,
+                        ),
                       ),
                     ),
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.secondary,
-                      shape: BoxShape.circle,
-                    ),
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.send,
-                        color: Theme.of(context).colorScheme.onSecondary,
-                      ),
-                      onPressed: () => _enviar(service),
+                  const SizedBox(width: 8),
+                  GestureDetector(
+                    onTap: () {
+                      if (controller.text.trim().isEmpty) return;
+
+                      // Enviamos el mensaje real a Firebase
+                      service.sendMessage(
+                        Message(
+                          text: controller.text.trim(),
+                          author: usuario,
+                          timestamp: DateTime.now().millisecondsSinceEpoch,
+                        ),
+                      );
+                      controller.clear();
+                    },
+                    child: const CircleAvatar(
+                      backgroundColor: Colors.blue,
+                      child: Icon(Icons.send, color: Colors.white),
                     ),
                   ),
                 ],
@@ -128,19 +150,9 @@ class ChatView extends ConsumerWidget {
           ),
         ],
       ),
+      backgroundColor: const Color(
+        0xFFE5DDD5,
+      ), // Color de fondo clásico de chat
     );
-  }
-
-  void _enviar(dynamic service) {
-    if (controller.text.trim().isEmpty) return;
-
-    service.sendMessage(
-      Message(
-        text: controller.text.trim(),
-        author: usuario,
-        timestamp: DateTime.now().millisecondsSinceEpoch,
-      ),
-    );
-    controller.clear();
   }
 }
