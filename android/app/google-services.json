@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "715942611896",
+    "project_id": "pry-chat-app",
+    "storage_bucket": "pry-chat-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:715942611896:android:69c806c16488a9244b5d4d",
+        "android_client_info": {
+          "package_name": "com.example.chatapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_QjOjMiN00B5Rgdqot15GBPvIHhCwwE0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:715942611896:android:f96ca8495af811eb4b5d4d",
+        "android_client_info": {
+          "package_name": "com.example.pry_chat_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_QjOjMiN00B5Rgdqot15GBPvIHhCwwE0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
