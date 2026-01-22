@@ -1,24 +1,13 @@
+// lib/data/services/firebase_service.dart
 import 'package:firebase_database/firebase_database.dart';
 import '../../domain/models/message.dart';
-import '../knowledgeBase_data.dart';
 
 class FirebaseService {
   final DatabaseReference _ref = FirebaseDatabase.instance.ref('chat/general');
 
-  void sendMessage(Message message) async {
-    await _ref.push().set(message.toJson());
-
-    String respuestaTexto = KnowledgeBase.getResponse(message.text);
-
-    await Future.delayed(const Duration(milliseconds: 800));
-
-    final botMessage = Message(
-      text: respuestaTexto,
-      author: "Bot Asistente",
-      timestamp: DateTime.now().millisecondsSinceEpoch,
-    );
-
-    await _ref.push().set(botMessage.toJson());
+  // Ahora solo envía el mensaje que tú escribes, no genera respuestas automáticas
+  void sendMessage(Message message) {
+    _ref.push().set(message.toJson());
   }
 
   Stream<List<Message>> getMessage() {
