@@ -34,23 +34,47 @@ class ChatView extends ConsumerWidget {
                   final esMio = m.author == usuario;
 
                   return Align(
-                    alignment: esMio ? Alignment.centerRight : Alignment.centerLeft,
+                    alignment: esMio
+                        ? Alignment.centerRight
+                        : Alignment.centerLeft,
                     child: Container(
                       margin: const EdgeInsets.symmetric(vertical: 5),
-                      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 15,
+                        vertical: 10,
+                      ),
                       decoration: BoxDecoration(
-                        color: esMio ? Colors.blue[100] : Colors.grey[300],
+                        color: esMio
+                            ? Theme.of(context).colorScheme.primary
+                            : Theme.of(
+                                context,
+                              ).colorScheme.secondary.withOpacity(0.2),
                         borderRadius: BorderRadius.circular(15),
                       ),
                       child: Column(
-                        crossAxisAlignment: esMio ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                        crossAxisAlignment: esMio
+                            ? CrossAxisAlignment.end
+                            : CrossAxisAlignment.start,
                         children: [
                           Text(
                             m.author,
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                              color: esMio
+                                  ? Theme.of(context).colorScheme.onPrimary
+                                  : Theme.of(context).colorScheme.onSurface,
+                            ),
                           ),
                           const SizedBox(height: 5),
-                          Text(m.text),
+                          Text(
+                            m.text,
+                            style: TextStyle(
+                              color: esMio
+                                  ? Theme.of(context).colorScheme.onPrimary
+                                  : Theme.of(context).colorScheme.onSurface,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -68,12 +92,7 @@ class ChatView extends ConsumerWidget {
               padding: const EdgeInsets.all(8.0),
               decoration: BoxDecoration(
                 color: Theme.of(context).cardColor,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 4,
-                  ),
-                ],
+                boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4)],
               ),
               child: Row(
                 children: [
@@ -91,14 +110,14 @@ class ChatView extends ConsumerWidget {
                     ),
                   ),
                   Container(
-                    decoration: const BoxDecoration(
-                      color: Colors.blue,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.secondary,
                       shape: BoxShape.circle,
                     ),
                     child: IconButton(
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.send,
-                        color: Colors.white,
+                        color: Theme.of(context).colorScheme.onSecondary,
                       ),
                       onPressed: () => _enviar(service),
                     ),
