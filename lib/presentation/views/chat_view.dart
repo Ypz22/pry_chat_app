@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pry_chat_app/utils/themes/general_theme.dart';
 import '../providers/chat_provider.dart';
 import '../../domain/models/message.dart';
 
@@ -10,7 +11,7 @@ class ChatView extends ConsumerWidget {
 
   // IMPORTANTE: Para probar con un amigo, uno debe tener "Jefferson"
   // y el otro debe cambiar esta variable a su propio nombre.
-  final String usuario = "Usuario Jefferson";
+  final String usuario = "Usuario Luis";
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -37,13 +38,18 @@ class ChatView extends ConsumerWidget {
                   final esMio = m.author == usuario;
 
                   return Align(
-                    alignment: esMio ? Alignment.centerRight : Alignment.centerLeft,
+                    alignment: esMio
+                        ? Alignment.centerRight
+                        : Alignment.centerLeft,
                     child: Container(
                       margin: const EdgeInsets.symmetric(vertical: 4),
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 14,
+                        vertical: 10,
+                      ),
                       decoration: BoxDecoration(
                         // Color verde para mis mensajes, gris para los de mi amigo
-                        color: esMio ? const Color(0xFFDCF8C6) : Colors.white,
+                        color: esMio ? Colors.lightGreenAccent : Colors.white,
                         borderRadius: BorderRadius.only(
                           topLeft: const Radius.circular(12),
                           topRight: const Radius.circular(12),
@@ -55,25 +61,29 @@ class ChatView extends ConsumerWidget {
                             color: Colors.black.withOpacity(0.05),
                             blurRadius: 2,
                             offset: const Offset(0, 1),
-                          )
+                          ),
                         ],
                       ),
                       child: Column(
-                        crossAxisAlignment: esMio ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                        crossAxisAlignment: esMio
+                            ? CrossAxisAlignment.end
+                            : CrossAxisAlignment.start,
                         children: [
-                          if (!esMio) // Solo mostramos el nombre si es un mensaje de otra persona
-                            Text(
-                              m.author,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 12,
-                                color: Colors.blueGrey,
-                              ),
+                          Text(
+                            m.author,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                              color: Colors.blueGrey,
                             ),
+                          ),
                           const SizedBox(height: 2),
                           Text(
                             m.text,
-                            style: const TextStyle(fontSize: 16, color: Colors.black87),
+                            style: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.black87,
+                            ),
                           ),
                         ],
                       ),
@@ -103,7 +113,10 @@ class ChatView extends ConsumerWidget {
                         hintText: 'Escribe un mensaje...',
                         fillColor: Colors.white,
                         filled: true,
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 15,
+                          vertical: 10,
+                        ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(25),
                           borderSide: BorderSide.none,
@@ -137,7 +150,9 @@ class ChatView extends ConsumerWidget {
           ),
         ],
       ),
-      backgroundColor: const Color(0xFFE5DDD5), // Color de fondo clásico de chat
+      backgroundColor: const Color(
+        0xFFE5DDD5,
+      ), // Color de fondo clásico de chat
     );
   }
 }
