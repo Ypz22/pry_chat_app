@@ -10,7 +10,7 @@ class ChatView extends ConsumerWidget {
   final TextEditingController controller = TextEditingController();
 
   // IMPORTANTE: Cambiar el nombre según el usuario
-  final String usuario = "Jefferson";
+  final String usuario = "Luis Sagnay";
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -63,10 +63,8 @@ class ChatView extends ConsumerWidget {
                             borderRadius: BorderRadius.only(
                               topLeft: const Radius.circular(16),
                               topRight: const Radius.circular(16),
-                              bottomLeft:
-                              Radius.circular(esMio ? 16 : 4),
-                              bottomRight:
-                              Radius.circular(esMio ? 4 : 16),
+                              bottomLeft: Radius.circular(esMio ? 16 : 4),
+                              bottomRight: Radius.circular(esMio ? 4 : 16),
                             ),
                             boxShadow: [
                               BoxShadow(
@@ -88,7 +86,7 @@ class ChatView extends ConsumerWidget {
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 12,
-                                    color: SchemaColor.errorColor,
+                                    color: obtenerColorUsuario(m.author),
                                   ),
                                 ),
                                 const SizedBox(height: 4),
@@ -109,8 +107,7 @@ class ChatView extends ConsumerWidget {
                   },
                 );
               },
-              loading: () =>
-              const Center(child: CircularProgressIndicator()),
+              loading: () => const Center(child: CircularProgressIndicator()),
               error: (e, _) => Center(
                 child: Text(
                   'Error: $e',
@@ -135,12 +132,10 @@ class ChatView extends ConsumerWidget {
                       style: const TextStyle(color: Colors.white),
                       decoration: InputDecoration(
                         hintText: 'Escribe un mensaje...',
-                        hintStyle:
-                        TextStyle(color: Colors.grey[500]),
+                        hintStyle: TextStyle(color: Colors.grey[500]),
                         fillColor: const Color(0xFF2C2C2C),
                         filled: true,
-                        contentPadding:
-                        const EdgeInsets.symmetric(
+                        contentPadding: const EdgeInsets.symmetric(
                           horizontal: 15,
                           vertical: 10,
                         ),
@@ -160,16 +155,14 @@ class ChatView extends ConsumerWidget {
                         Message(
                           text: controller.text.trim(),
                           author: usuario,
-                          timestamp: DateTime.now()
-                              .millisecondsSinceEpoch,
+                          timestamp: DateTime.now().millisecondsSinceEpoch,
                         ),
                       );
                       controller.clear();
                     },
                     child: CircleAvatar(
                       backgroundColor: SchemaColor.accentColor,
-                      child: const Icon(Icons.send,
-                          color: Colors.white),
+                      child: const Icon(Icons.send, color: Colors.white),
                     ),
                   ),
                 ],
