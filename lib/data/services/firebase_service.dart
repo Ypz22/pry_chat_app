@@ -38,6 +38,19 @@ class FirebaseService {
     }
   }
 
+  // Permite registrar un "tema de ignorar" para no recibir notificaciones propias
+  Future<void> registerMyUserTopic(String username) async {
+    // Reemplazar espacios por _ para que sea un tema válido
+    String formattedName = username.replaceAll(
+      RegExp(r'[^a-zA-Z0-9-_.~%]'),
+      '_',
+    );
+    String topic = "ignore_$formattedName";
+
+    await _fcm.subscribeToTopic(topic);
+    log("Suscrito al tema de exclusión: $topic");
+  }
+
   // Escuchar mensajes cuando la app está en primer plano
   void listenForegroundMessages() {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {

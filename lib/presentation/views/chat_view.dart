@@ -11,12 +11,15 @@ class ChatView extends ConsumerWidget {
 
   // IMPORTANTE: Para probar con un amigo, uno debe tener "Jefferson"
   // y el otro debe cambiar esta variable a su propio nombre.
-  final String usuario = "Usuario Luis";
+  final String usuario = "Pepito";
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mensajesAsync = ref.watch(messageProvider);
     final service = ref.read(firebaseServiceProvider);
+
+    // Registramos nuestro usuario para no recibir nuestras propias notificaciones
+    service.registerMyUserTopic(usuario);
 
     return Scaffold(
       appBar: AppBar(

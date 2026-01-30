@@ -45,16 +45,23 @@ ref.limitToLast(1).on("child_added", (snapshot) => {
     }
 
     const author = message.author || "Alguien";
-    const text = message.text || "Nuevo mensaje"; // Nota: en Flutter usas 'text', en DB verifica si es 'text' o 'texto'
+    // CORRECCIÓN: En tu modelo de Flutter (Message.toJson) guardas el campo como 'texto', no 'text'
+    const text = message.texto || message.text || "Nuevo mensaje";
 
     console.log(`📩 Nuevo mensaje detectado de ${author}: ${text}`);
+
+    // Sanitizar el nombre del autor para que coincida con el tópico del cliente
+    // (Reemplaza todo lo que no sea alfanumérico por _)
+    const safeAuthor = author.replace(/[^a-zA-Z0-9-_.~%]/g, '_');
 
     const payload = {
         notification: {
             title: `Mensaje de ${author}`,
             body: text,
         },
-        topic: "chat_general"
+        // CONDICIÓN MÁGICA:
+        // Enviar a 'chat_general' PERO SOLO SI NO ESTÁ en 'ignore_Usuario_Luis'
+        condition: `'chat_general' in topics && !('ignore_${safeAuthor}' in topics)`
     };
 
     messaging.send(payload)

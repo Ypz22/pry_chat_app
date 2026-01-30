@@ -47,3 +47,5 @@ app.*.map.json
 
 backend/serviceaccountkey.json
 node_modules/
+
+*/node_modules/
