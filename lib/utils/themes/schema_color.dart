@@ -36,4 +36,5 @@ Color obtenerColorUsuario(String nombre) {
   // Usamos el valor absoluto y el operador módulo para elegir un índice
   final index = hash.abs() % coloresDisponibles.length;
   return coloresDisponibles[index];
+
 }

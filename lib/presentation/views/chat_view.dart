@@ -73,6 +73,7 @@ class ChatView extends ConsumerWidget {
                                 offset: const Offset(0, 1),
                               ),
                             ],
+
                           ),
                           child: Column(
                             crossAxisAlignment: esMio
