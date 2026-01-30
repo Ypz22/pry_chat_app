@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pry_chat_app/utils/themes/general_theme.dart';
+import 'package:pry_chat_app/utils/themes/schema_color.dart';
 import '../providers/chat_provider.dart';
 import '../../domain/models/message.dart';
 
@@ -23,85 +23,102 @@ class ChatView extends ConsumerWidget {
         title: const Text('Chat Grupal'),
         centerTitle: true,
         elevation: 1,
+        backgroundColor: SchemaColor.accentColor,
+        foregroundColor: Colors.white,
       ),
       body: Column(
         children: [
-          // Lista de mensajes
+          // Lista de mensajes, usando Expanded para ocupar el espacio
           Expanded(
             child: mensajesAsync.when(
-              data: (mensajes) => ListView.builder(
-                padding: const EdgeInsets.all(12),
-                itemCount: mensajes.length,
-                itemBuilder: (_, i) {
-                  final m = mensajes[i];
-                  // Verificamos si el autor del mensaje soy yo
-                  final esMio = m.author == usuario;
+              data: (mensajes) {
+                // Invertimos la lista para mostrar primero (abajo) el más reciente
+                final reversedMessages = mensajes.reversed.toList();
 
-                  return Align(
-                    alignment: esMio
-                        ? Alignment.centerRight
-                        : Alignment.centerLeft,
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(vertical: 4),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 14,
-                        vertical: 10,
-                      ),
-                      decoration: BoxDecoration(
-                        // Color verde para mis mensajes, gris para los de mi amigo
-                        color: esMio ? Colors.lightGreenAccent : Colors.white,
-                        borderRadius: BorderRadius.only(
-                          topLeft: const Radius.circular(12),
-                          topRight: const Radius.circular(12),
-                          bottomLeft: Radius.circular(esMio ? 12 : 0),
-                          bottomRight: Radius.circular(esMio ? 0 : 12),
+                return ListView.builder(
+                  reverse: true, // Esto hace que la lista inicie desde abajo
+                  padding: const EdgeInsets.all(12),
+                  itemCount: reversedMessages.length,
+                  itemBuilder: (_, i) {
+                    final m = reversedMessages[i];
+                    final esMio = m.author == usuario;
+
+                    return Align(
+                      alignment: esMio
+                          ? Alignment.centerRight
+                          : Alignment.centerLeft,
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 14,
+                          vertical: 10,
                         ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.05),
-                            blurRadius: 2,
-                            offset: const Offset(0, 1),
+                        decoration: BoxDecoration(
+                          color: esMio
+                              ? SchemaColor.primaryColor
+                              : SchemaColor.secondaryColor,
+                          borderRadius: BorderRadius.only(
+                            topLeft: const Radius.circular(16),
+                            topRight: const Radius.circular(16),
+                            bottomLeft: Radius.circular(esMio ? 16 : 4),
+                            bottomRight: Radius.circular(esMio ? 4 : 16),
                           ),
-                        ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: esMio
-                            ? CrossAxisAlignment.end
-                            : CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            m.author,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12,
-                              color: Colors.blueGrey,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.3),
+                              blurRadius: 2,
+                              offset: const Offset(0, 1),
                             ),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            m.text,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.black87,
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: esMio
+                              ? CrossAxisAlignment.end
+                              : CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (!esMio) ...[
+                              Text(
+                                m.author,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                  color: Colors.grey[400],
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                            ],
+                            Text(
+                              m.text,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: Colors
+                                    .white, // Texto blanco para contraste con fondo oscuro
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                },
-              ),
+                    );
+                  },
+                );
+              },
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (e, _) => Center(child: Text('Error de conexión: $e')),
+              error: (e, _) => Center(
+                child: Text(
+                  'Error: $e',
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ),
             ),
           ),
 
-          // Barra inferior para escribir
+          // Barra inferior oscura
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
             decoration: BoxDecoration(
-              color: Colors.grey[200],
-              border: Border(top: BorderSide(color: Colors.grey[300]!)),
+              color: const Color(0xFF1E1E1E), // Gris muy oscuro
+              border: Border(top: BorderSide(color: Colors.grey[800]!)),
             ),
             child: SafeArea(
               child: Row(
@@ -109,9 +126,13 @@ class ChatView extends ConsumerWidget {
                   Expanded(
                     child: TextField(
                       controller: controller,
+                      style: const TextStyle(color: Colors.white),
                       decoration: InputDecoration(
                         hintText: 'Escribe un mensaje...',
-                        fillColor: Colors.white,
+                        hintStyle: TextStyle(color: Colors.grey[500]),
+                        fillColor: const Color(
+                          0xFF2C2C2C,
+                        ), // Input background gris oscuro
                         filled: true,
                         contentPadding: const EdgeInsets.symmetric(
                           horizontal: 15,
@@ -128,8 +149,6 @@ class ChatView extends ConsumerWidget {
                   GestureDetector(
                     onTap: () {
                       if (controller.text.trim().isEmpty) return;
-
-                      // Enviamos el mensaje real a Firebase
                       service.sendMessage(
                         Message(
                           text: controller.text.trim(),
@@ -139,9 +158,9 @@ class ChatView extends ConsumerWidget {
                       );
                       controller.clear();
                     },
-                    child: const CircleAvatar(
-                      backgroundColor: Colors.blue,
-                      child: Icon(Icons.send, color: Colors.white),
+                    child: CircleAvatar(
+                      backgroundColor: SchemaColor.primaryColor,
+                      child: const Icon(Icons.send, color: Colors.white),
                     ),
                   ),
                 ],
@@ -150,9 +169,7 @@ class ChatView extends ConsumerWidget {
           ),
         ],
       ),
-      backgroundColor: const Color(
-        0xFFE5DDD5,
-      ), // Color de fondo clásico de chat
+      backgroundColor: Colors.black, // Fondo negro global
     );
   }
 }
