@@ -16,22 +16,31 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  String? initializationError;
 
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
 
-  // Configurar el manejador de segundo plano
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    // Configurar el manejador de segundo plano
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-  // Inicializar servicios de FCM
-  final firebaseService = FirebaseService();
-  await firebaseService.setupNotifications();
-  firebaseService.listenForegroundMessages();
+    // Inicializar servicios de FCM
+    final firebaseService = FirebaseService();
+    await firebaseService.setupNotifications();
+    firebaseService.listenForegroundMessages();
+  } catch (e, s) {
+    print("Error initializing Firebase: $e");
+    initializationError = "Error: $e\nStack: $s";
+  }
 
-  runApp(const ProviderScope(child: MyApp()));
+  runApp(ProviderScope(child: MyApp(initializationError: initializationError)));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final String? initializationError;
+  const MyApp({super.key, this.initializationError});
 
   @override
   Widget build(BuildContext context) {

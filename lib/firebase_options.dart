@@ -51,13 +51,13 @@ class DefaultFirebaseOptions {
     databaseURL: 'https://pry-chat-app-default-rtdb.firebaseio.com',
   );
 
-
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyB_QjOjMiN00B5Rgdqot15GBPvIHhCwwE0',
     appId: '1:715942611896:android:f96ca8495af811eb4b5d4d',
     messagingSenderId: '715942611896',
     projectId: 'pry-chat-app',
     storageBucket: 'pry-chat-app.firebasestorage.app',
+    databaseURL: 'https://pry-chat-app-default-rtdb.firebaseio.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
