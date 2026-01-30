@@ -83,7 +83,7 @@ class ChatView extends ConsumerWidget {
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 12,
-                                  color: Colors.grey[400],
+                                  color: SchemaColor.errorColor,
                                 ),
                               ),
                               const SizedBox(height: 4),
@@ -117,7 +117,7 @@ class ChatView extends ConsumerWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
             decoration: BoxDecoration(
-              color: const Color(0xFF1E1E1E), // Gris muy oscuro
+              color: SchemaColor.backgroundColor, // Gris muy oscuro
               border: Border(top: BorderSide(color: Colors.grey[800]!)),
             ),
             child: SafeArea(
@@ -159,7 +159,7 @@ class ChatView extends ConsumerWidget {
                       controller.clear();
                     },
                     child: CircleAvatar(
-                      backgroundColor: SchemaColor.primaryColor,
+                      backgroundColor: SchemaColor.accentColor,
                       child: const Icon(Icons.send, color: Colors.white),
                     ),
                   ),
@@ -169,7 +169,7 @@ class ChatView extends ConsumerWidget {
           ),
         ],
       ),
-      backgroundColor: Colors.black, // Fondo negro global
+      backgroundColor: SchemaColor.backgroundColor, // Fondo negro global
     );
   }
 }

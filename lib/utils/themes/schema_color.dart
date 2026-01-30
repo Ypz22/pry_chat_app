@@ -5,7 +5,7 @@ class SchemaColor {
 
   static const Color secondaryColor = Color(0xFF333333);
 
-  static const Color accentColor = Color.fromARGB(255, 176, 64, 251);
+  static const Color accentColor = Color.fromARGB(255, 153, 69, 255);
 
   static const Color successColor = Color(0xFF4CAF50);
   static const Color errorColor = Color(0xFFCF6679);
