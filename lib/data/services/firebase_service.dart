@@ -15,16 +15,25 @@ class FirebaseService {
       alert: true,
       badge: true,
       sound: true,
+      provisional: false,
     );
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       log('Usuario otorgó permiso para notificaciones');
 
-      // 2. Obtener el Token del dispositivo (útil para enviar notificaciones a usuarios específicos)
+      // 2. IMPORTANTE: Configurar opciones de presentación en primer plano
+      // Esto hace que las notificaciones se muestren incluso si la app está abierta
+      await _fcm.setForegroundNotificationPresentationOptions(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+
+      // 3. Obtener el Token del dispositivo (útil para enviar notificaciones a usuarios específicos)
       String? token = await _fcm.getToken();
       log("FCM Token: $token");
 
-      // 3. Suscribirse a un tema "general" para recibir notificaciones de grupo
+      // 4. Suscribirse a un tema "general" para recibir notificaciones de grupo
       await _fcm.subscribeToTopic('chat_general');
     }
   }
