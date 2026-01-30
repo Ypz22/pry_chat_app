@@ -11,7 +11,7 @@ class ChatView extends ConsumerWidget {
 
   // IMPORTANTE: Para probar con un amigo, uno debe tener "Jefferson"
   // y el otro debe cambiar esta variable a su propio nombre.
-  final String usuario = "Usuario Jefferson";
+  final String usuario = "Usuario Luis";
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
