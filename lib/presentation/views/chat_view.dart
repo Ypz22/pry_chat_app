@@ -9,16 +9,14 @@ class ChatView extends ConsumerWidget {
 
   final TextEditingController controller = TextEditingController();
 
-  // IMPORTANTE: Para probar con un amigo, uno debe tener "Jefferson"
-  // y el otro debe cambiar esta variable a su propio nombre.
-  final String usuario = "Pepito";
+  // IMPORTANTE: Cambiar el nombre según el usuario
+  final String usuario = "Jefferson";
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mensajesAsync = ref.watch(messageProvider);
     final service = ref.read(firebaseServiceProvider);
 
-    // Registramos nuestro usuario para no recibir nuestras propias notificaciones
     service.registerMyUserTopic(usuario);
 
     return Scaffold(
@@ -31,15 +29,13 @@ class ChatView extends ConsumerWidget {
       ),
       body: Column(
         children: [
-          // Lista de mensajes, usando Expanded para ocupar el espacio
           Expanded(
             child: mensajesAsync.when(
               data: (mensajes) {
-                // Invertimos la lista para mostrar primero (abajo) el más reciente
                 final reversedMessages = mensajes.reversed.toList();
 
                 return ListView.builder(
-                  reverse: true, // Esto hace que la lista inicie desde abajo
+                  reverse: true,
                   padding: const EdgeInsets.all(12),
                   itemCount: reversedMessages.length,
                   itemBuilder: (_, i) {
@@ -50,63 +46,71 @@ class ChatView extends ConsumerWidget {
                       alignment: esMio
                           ? Alignment.centerRight
                           : Alignment.centerLeft,
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(vertical: 4),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 14,
-                          vertical: 10,
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxWidth: MediaQuery.of(context).size.width * 0.75,
                         ),
-                        decoration: BoxDecoration(
-                          color: esMio
-                              ? SchemaColor.primaryColor
-                              : SchemaColor.secondaryColor,
-                          borderRadius: BorderRadius.only(
-                            topLeft: const Radius.circular(16),
-                            topRight: const Radius.circular(16),
-                            bottomLeft: Radius.circular(esMio ? 16 : 4),
-                            bottomRight: Radius.circular(esMio ? 4 : 16),
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 14,
+                            vertical: 10,
                           ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.3),
-                              blurRadius: 2,
-                              offset: const Offset(0, 1),
+                          decoration: BoxDecoration(
+                            color: esMio
+                                ? SchemaColor.primaryColor
+                                : SchemaColor.secondaryColor,
+                            borderRadius: BorderRadius.only(
+                              topLeft: const Radius.circular(16),
+                              topRight: const Radius.circular(16),
+                              bottomLeft:
+                              Radius.circular(esMio ? 16 : 4),
+                              bottomRight:
+                              Radius.circular(esMio ? 4 : 16),
                             ),
-                          ],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: esMio
-                              ? CrossAxisAlignment.end
-                              : CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            if (!esMio) ...[
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.3),
+                                blurRadius: 2,
+                                offset: const Offset(0, 1),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            crossAxisAlignment: esMio
+                                ? CrossAxisAlignment.end
+                                : CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              if (!esMio) ...[
+                                Text(
+                                  m.author,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
+                                    color: SchemaColor.errorColor,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                              ],
                               Text(
-                                m.author,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12,
-                                  color: SchemaColor.errorColor,
+                                m.text,
+                                softWrap: true,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.white,
                                 ),
                               ),
-                              const SizedBox(height: 4),
                             ],
-                            Text(
-                              m.text,
-                              style: const TextStyle(
-                                fontSize: 16,
-                                color: Colors
-                                    .white, // Texto blanco para contraste con fondo oscuro
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
                       ),
                     );
                   },
                 );
               },
-              loading: () => const Center(child: CircularProgressIndicator()),
+              loading: () =>
+              const Center(child: CircularProgressIndicator()),
               error: (e, _) => Center(
                 child: Text(
                   'Error: $e',
@@ -116,11 +120,10 @@ class ChatView extends ConsumerWidget {
             ),
           ),
 
-          // Barra inferior oscura
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
             decoration: BoxDecoration(
-              color: SchemaColor.backgroundColor, // Gris muy oscuro
+              color: SchemaColor.backgroundColor,
               border: Border(top: BorderSide(color: Colors.grey[800]!)),
             ),
             child: SafeArea(
@@ -132,12 +135,12 @@ class ChatView extends ConsumerWidget {
                       style: const TextStyle(color: Colors.white),
                       decoration: InputDecoration(
                         hintText: 'Escribe un mensaje...',
-                        hintStyle: TextStyle(color: Colors.grey[500]),
-                        fillColor: const Color(
-                          0xFF2C2C2C,
-                        ), // Input background gris oscuro
+                        hintStyle:
+                        TextStyle(color: Colors.grey[500]),
+                        fillColor: const Color(0xFF2C2C2C),
                         filled: true,
-                        contentPadding: const EdgeInsets.symmetric(
+                        contentPadding:
+                        const EdgeInsets.symmetric(
                           horizontal: 15,
                           vertical: 10,
                         ),
@@ -152,18 +155,21 @@ class ChatView extends ConsumerWidget {
                   GestureDetector(
                     onTap: () {
                       if (controller.text.trim().isEmpty) return;
+
                       service.sendMessage(
                         Message(
                           text: controller.text.trim(),
                           author: usuario,
-                          timestamp: DateTime.now().millisecondsSinceEpoch,
+                          timestamp: DateTime.now()
+                              .millisecondsSinceEpoch,
                         ),
                       );
                       controller.clear();
                     },
                     child: CircleAvatar(
                       backgroundColor: SchemaColor.accentColor,
-                      child: const Icon(Icons.send, color: Colors.white),
+                      child: const Icon(Icons.send,
+                          color: Colors.white),
                     ),
                   ),
                 ],
@@ -172,7 +178,7 @@ class ChatView extends ConsumerWidget {
           ),
         ],
       ),
-      backgroundColor: SchemaColor.backgroundColor, // Fondo negro global
+      backgroundColor: SchemaColor.backgroundColor,
     );
   }
 }
