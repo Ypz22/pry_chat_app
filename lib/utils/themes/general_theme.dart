@@ -7,19 +7,23 @@ import 'form_theme.dart';
 
 class GeneralTheme {
   static ThemeData lightTheme = ThemeData(
-    colorScheme: ColorScheme.light(
+    brightness: Brightness.dark, // Indica que es un tema oscuro
+    colorScheme: ColorScheme.dark(
       primary: SchemaColor.primaryColor,
       secondary: SchemaColor.secondaryColor,
       background: SchemaColor.backgroundColor,
-      surface: SchemaColor.backgroundColor,
+      surface: SchemaColor.secondaryColor, // Superficies de tarjetas, etc.
       error: SchemaColor.errorColor,
-      onPrimary: SchemaColor.lightTextColor,
-      onSecondary: SchemaColor.lightTextColor,
-      onBackground: SchemaColor.darkTextColor,
-      onSurface: SchemaColor.darkTextColor,
+      onPrimary: Colors.white,
+      onSecondary: Colors.white,
+      onBackground: Colors.white,
+      onSurface: Colors.white,
     ),
 
-    textTheme: Typographic.textTheme,
+    textTheme: Typographic.textTheme.apply(
+      bodyColor: Colors.white,
+      displayColor: Colors.white,
+    ),
     appBarTheme: AppBarThemeApp.appBarTheme,
     elevatedButtonTheme: ButtonThemeApp.primaryButtonStyle,
     outlinedButtonTheme: ButtonThemeApp.secondaryButtonStyle,
