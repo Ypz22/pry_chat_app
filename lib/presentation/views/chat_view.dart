@@ -11,7 +11,7 @@ class ChatView extends ConsumerWidget {
 
   // IMPORTANTE: Para probar con un amigo, uno debe tener "Jefferson"
   // y el otro debe cambiar esta variable a su propio nombre.
-  final String usuario = "Pepito";
+  final String usuario = "Luis Sagnay";
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -51,6 +51,9 @@ class ChatView extends ConsumerWidget {
                           ? Alignment.centerRight
                           : Alignment.centerLeft,
                       child: Container(
+                        constraints: BoxConstraints(
+                          maxWidth: MediaQuery.of(context).size.width * 0.75,
+                        ),
                         margin: const EdgeInsets.symmetric(vertical: 4),
                         padding: const EdgeInsets.symmetric(
                           horizontal: 14,
@@ -86,7 +89,7 @@ class ChatView extends ConsumerWidget {
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 12,
-                                  color: SchemaColor.errorColor,
+                                  color: obtenerColorUsuario(m.author),
                                 ),
                               ),
                               const SizedBox(height: 4),
@@ -97,6 +100,17 @@ class ChatView extends ConsumerWidget {
                                 fontSize: 16,
                                 color: Colors
                                     .white, // Texto blanco para contraste con fondo oscuro
+                              ),
+                            ),
+                            Text(
+                              TimeOfDay.fromDateTime(
+                                DateTime.fromMillisecondsSinceEpoch(
+                                  m.timestamp,
+                                ),
+                              ).format(context),
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: Colors.grey[400],
                               ),
                             ),
                           ],

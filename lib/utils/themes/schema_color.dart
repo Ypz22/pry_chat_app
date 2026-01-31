@@ -17,3 +17,17 @@ class SchemaColor {
     0xB3FFFFFF,
   ); // Texto blanco con transparencia para contraste
 }
+
+Color obtenerColorUsuario(String nombre) {
+  final List<Color> coloresDisponibles = [
+    Colors.greenAccent,
+    Colors.orangeAccent,
+    Colors.pinkAccent,
+    Colors.cyanAccent,
+    Colors.amberAccent,
+  ];
+
+  final int index = nombre.hashCode.abs() % coloresDisponibles.length;
+
+  return coloresDisponibles[index];
+}
