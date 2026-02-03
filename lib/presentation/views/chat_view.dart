@@ -9,8 +9,7 @@ class ChatView extends ConsumerWidget {
 
   final TextEditingController controller = TextEditingController();
 
-  // IMPORTANTE: Para probar con un amigo, uno debe tener "Jefferson"
-  // y el otro debe cambiar esta variable a su propio nombre.
+  // IMPORTANTE: Cambiar segun la persona
   final String usuario = "Luis Sagnay";
 
   @override

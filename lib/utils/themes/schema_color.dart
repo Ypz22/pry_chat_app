@@ -13,9 +13,7 @@ class SchemaColor {
   static const Color backgroundColor = Color(0xFF000000);
 
   static const Color lightTextColor = Color(0xFFFFFFFF);
-  static const Color darkTextColor = Color(
-    0xB3FFFFFF,
-  ); // Texto blanco con transparencia para contraste
+  static const Color darkTextColor = Color(0xB3FFFFFF);
 }
 
 Color obtenerColorUsuario(String nombre) {
